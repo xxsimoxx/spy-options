@@ -58,7 +58,8 @@ class SpyOptions {
 	}
 
 	public function render_page() {
-		echo '<style media="screen">.button.button-danger { background-color: indianred; color: white; margin-top: 10px; } .item {padding-bottom: 10px; }</style>';
+		echo '<style media="screen">.button.button-danger { background-color: #DE3C3C; color: white; margin-top: 10px; box-shadow: 0 1px 0 #C10100; border-color: #C00000} .item {padding-bottom: 10px; }
+		.button.button-danger:hover, .button.button-danger:focus {border-color: #C00; color: #FFF; background: #C00;}</style>';
 		echo '<div class="wrap"><h1>'.esc_html(get_admin_page_title()).'</h1>';
 		echo wp_kses_post(self::USAGE);
 
