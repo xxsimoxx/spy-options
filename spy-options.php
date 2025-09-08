@@ -19,17 +19,17 @@ if (!defined('ABSPATH')) {
 
 class SpyOptions {
 
-	private $screen  = '';
-	const SLUG  = 'spy_options';
-	const USAGE = '<div class="item">This plugin collects options and the plugins that modify them.<i>The longer it remains active, the more options will be listed on this page.</i><br>By selecting the plugins and pressing delete all the options relating to those plugins will be deleted.<br><b>Use at your own risk.</b></div>';
+	private $screen      = '';
+	const SLUG           = 'spy_options';
+	const USAGE          = '<div class="item">This plugin collects options and the plugins that modify them.<i>The longer it remains active, the more options will be listed on this page.</i><br>By selecting the plugins and pressing delete all the options relating to those plugins will be deleted.<br><b>Use at your own risk.</b></div>';
 	const UNSAFE_OPTIONS = [
 		'cron',
 	];
 
 	public function __construct() {
 		add_action('update_option', [$this, 'spy']);
-		add_action('add_option', [$this, 'spy']);
-		add_action('admin_menu', [$this, 'create_menu'], 100);
+		add_action('add_option',    [$this, 'spy']);
+		add_action('admin_menu',    [$this, 'create_menu'], 100);
 	}
 
 	public function spy($option) {
