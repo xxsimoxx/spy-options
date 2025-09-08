@@ -42,7 +42,7 @@ class SpyOptions {
 		// Without debug_backtrace this plugin just can't work.
 		$bts = debug_backtrace(); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 		foreach ($bts as $bt) {
-			if (!str_contains($bt['file'], WP_CONTENT_DIR.'/plugins')) {
+			if (!str_contains($bt['file'] ?? '', WP_CONTENT_DIR.'/plugins')) {
 				continue;
 			}
 			$slug = str_replace(WP_CONTENT_DIR.'/plugins/', '', $bt['file']);
