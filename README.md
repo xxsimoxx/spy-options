@@ -1,3 +1,5 @@
+![Spy options banner](images/banner-1544x500.png "Spy options")
+
 # Spy options
 
 **Get a list of which plugin use which option and delete unused ones.**
