@@ -1,4 +1,4 @@
-![Spy options banner](images/banner-1544x500.png "Spy options")
+![Spy options banner](images/banner-1544x500.jpg "Spy options")
 
 # Spy options
 
