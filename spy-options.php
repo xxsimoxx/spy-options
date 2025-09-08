@@ -25,6 +25,7 @@ class SpyOptions {
 
 	public function __construct() {
 		add_action('update_option', [$this, 'spy']);
+		add_action('add_option', [$this, 'spy']);
 		add_action('admin_menu', [$this, 'create_menu'], 100);
 	}
 
