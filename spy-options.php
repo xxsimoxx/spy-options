@@ -74,11 +74,16 @@ class SpyOptions {
 		echo '<div class="wrap"><h1>'.esc_html(get_admin_page_title()).'</h1>';
 
 		$this->display_notices(self::SLUG.'_notices');
+		$list = get_option('spy-options-options', []);
+		if ($list === []) {
+			echo 'Nothing to show yet.';
+			echo '</div>';
+			return;
+		}
 
 		echo '<form action="'.esc_url_raw(add_query_arg(['action' => 'delete'], admin_url('admin.php?page='.self::SLUG))).'" method="POST">';
 		wp_nonce_field('delete', '_'.self::SLUG);
 
-		$list = get_option('spy-options-options', []);
 		foreach ($list as $plugin_name => $options) {
 			echo '<div class="item"><input type="checkbox" id="'.esc_attr($plugin_name).'" name="'.esc_attr($plugin_name).'">';
 			echo '<label for="'.esc_attr($plugin_name).'">'.esc_attr($plugin_name).'</label><br>';
