@@ -19,10 +19,10 @@ if (!defined('ABSPATH')) {
 
 class SpyOptions {
 
-	private $screen      = '';
+	private $screen       = '';
 	private $core_options = [];
 
-	const SLUG           = 'spy_options';
+	const SLUG = 'spy_options';
 
 	public function __construct() {
 		require_once __DIR__.'/includes/core-options.php';
@@ -119,7 +119,6 @@ class SpyOptions {
 When the site is finished, this plugin helps to clean up the database from options that are no longer necessary, allowing you to delete all the options of one or more plugins.<br>
 The longer it remains active, the more options will be listed on this page.</p>
 <p><b>By selecting the plugins and pressing delete all the options relating to those plugins will be deleted.</b><br>Options displayed in <code class="spy-core-option">darker gray</code> are core options, and will not be deleted.</p>';
-
 
 		$screen = get_current_screen();
 		$screen->add_help_tab(
