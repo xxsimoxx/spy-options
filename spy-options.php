@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Spy options
  * Description:  Get a list of which plugin use which option and delete unused ones.
- * Version:      1.0.0
+ * Version:      1.1.0
  * License:      GPL2
  * Requires CP:  2.5
  * Requires PHP: 8.0
@@ -23,15 +23,16 @@ class SpyOptions {
 	private $core_options = [];
 
 	const SLUG           = 'spy_options';
-	const USAGE          = '<div class="item">This plugin collects options and the plugins that modify them.<i>The longer it remains active, the more options will be listed on this page.</i><br>By selecting the plugins and pressing delete all the options relating to those plugins will be deleted.<br><b>Use at your own risk.</b></div>';
 
 	public function __construct() {
 		require_once __DIR__.'/includes/core-options.php';
 		$this->core_options = get_core_options();
 
-		add_action('update_option', [$this, 'spy']);
-		add_action('add_option',    [$this, 'spy']);
-		add_action('admin_menu',    [$this, 'create_menu'], 100);
+		add_action('update_option',         [$this, 'spy']);
+		add_action('add_option',            [$this, 'spy']);
+
+		add_action('admin_menu',            [$this, 'create_menu'], 100);
+		add_action('admin_enqueue_scripts', [$this, 'backend_css']);
 	}
 
 	public function spy($option) {
@@ -67,12 +68,7 @@ class SpyOptions {
 	}
 
 	public function render_page() {
-		echo '<style media="screen">.button.button-danger { background-color: #DE3C3C; color: white; margin-top: 10px; box-shadow: 0 1px 0 #C10100; border-color: #C00000} .item {padding-bottom: 10px; }
-		.button.button-danger:hover, .button.button-danger:focus {border-color: #C00; color: #FFF; background: #C00;}
-		.spy-core-option {background: rgba(0, 0, 0, 0.25);}
-		.item {line-height: 2;}</style>';
 		echo '<div class="wrap"><h1>'.esc_html(get_admin_page_title()).'</h1>';
-		echo wp_kses_post(self::USAGE);
 
 		$this->display_notices(self::SLUG.'_notices');
 
@@ -83,8 +79,6 @@ class SpyOptions {
 		foreach ($list as $plugin_name => $options) {
 			echo '<div class="item"><input type="checkbox" id="'.esc_attr($plugin_name).'" name="'.esc_attr($plugin_name).'">';
 			echo '<label for="'.esc_attr($plugin_name).'">'.esc_attr($plugin_name).'</label><br>';
-			//$opt_list = implode('</code>, <code>', $options);
-			//$opt_list = '<code>'.$opt_list.'</code>.';
 			echo wp_kses_post($this->options_list($options));
 			echo '</div>';
 		}
@@ -106,6 +100,27 @@ class SpyOptions {
 			'dashicons-search'
 		);
 		add_action('load-'.$this->screen, [$this, 'delete_action']);
+		add_action('load-'.$this->screen, [$this, 'help']);
+	}
+
+	public function help() {
+		$general_content = '<p><b>Get a list of which plugin use which option and delete unused ones.</b></p>
+<p>This plugin catches other plugins adding/updating options and log options for each plugin.</p>
+<p><b>This plugin is not intended to run in production.</b></p>
+<p>When creating a new website, it is common to experiment with multiple plugins to achieve the desired functionality.<br>
+When the site is finished, this plugin helps to clean up the database from options that are no longer necessary, allowing you to delete all the options of one or more plugins.<br>
+The longer it remains active, the more options will be listed on this page.</p>
+<p><b>By selecting the plugins and pressing delete all the options relating to those plugins will be deleted.</b><br>Options displayed in <code class="spy-core-option">darker gray</code> are core options, and will not be deleted.</p>';
+
+
+		$screen = get_current_screen();
+		$screen->add_help_tab(
+			[
+				'id'	  => 'spy_options_help_tab_general',
+				'title'	  => 'Usage',
+				'content' => '<p>'.$general_content.'</p>',
+			]
+		);
 	}
 
 	public function delete_action() {
@@ -138,6 +153,13 @@ class SpyOptions {
 		$sendback = remove_query_arg(['action', '_'.self::SLUG], wp_get_referer());
 		wp_safe_redirect($sendback);
 		exit;
+	}
+
+	public function backend_css($hook) {
+		if ($hook !== $this->screen) {
+			return;
+		}
+		wp_enqueue_style('spy_options_backend', plugin_dir_url(__FILE__).'css/backend.css', [], '1.1.0');
 	}
 
 	function before_action_checks($action) {

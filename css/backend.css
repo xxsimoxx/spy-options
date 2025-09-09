@@ -1,0 +1,21 @@
+.button.button-danger {
+	background-color: #DE3C3C;
+	color: white;
+	margin-top: 10px;
+	box-shadow: 0 1px 0 #C10100;
+	border-color: #C00000
+}
+.item {
+	padding-bottom: 10px;
+}
+.button.button-danger:hover, .button.button-danger:focus {
+	border-color: #C00;
+	color: #FFF;
+	background: #C00;
+}
+.spy-core-option {
+	background: rgba(0, 0, 0, 0.25);
+}
+.item {
+	line-height: 2;
+}
