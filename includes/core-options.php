@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 
 
 function get_core_options() {
-	$options = [
+	return [
 		'active_plugins',
 		'admin_email_lifespan',
 		'admin_email',
@@ -114,5 +114,4 @@ function get_core_options() {
 		'wp_force_deactivated_plugins',
 		'wp_page_for_privacy_policy',
 	];
-	return $options;
 }

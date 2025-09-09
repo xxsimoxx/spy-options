@@ -10,6 +10,7 @@ This plugin catches other plugins adding/updating options and log options for ea
 
 When creating a new website, it is common to experiment with multiple plugins to achieve the desired functionality.
 When the site is finished, this plugin helps to clean up the database from options that are no longer necessary, allowing you to delete all the options of one or more plugins.
+Options displayed in darker gray are core options, and will not be deleted.
 
 This plugin is built for [ClassicPress](https://www.classicpress.net/).
 
