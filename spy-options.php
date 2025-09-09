@@ -20,13 +20,15 @@ if (!defined('ABSPATH')) {
 class SpyOptions {
 
 	private $screen      = '';
+	private $core_options = [];
+
 	const SLUG           = 'spy_options';
 	const USAGE          = '<div class="item">This plugin collects options and the plugins that modify them.<i>The longer it remains active, the more options will be listed on this page.</i><br>By selecting the plugins and pressing delete all the options relating to those plugins will be deleted.<br><b>Use at your own risk.</b></div>';
-	const UNSAFE_OPTIONS = [
-		'cron',
-	];
 
 	public function __construct() {
+		require_once __DIR__.'/includes/core-options.php';
+		$this->core_options = get_core_options();
+
 		add_action('update_option', [$this, 'spy']);
 		add_action('add_option',    [$this, 'spy']);
 		add_action('admin_menu',    [$this, 'create_menu'], 100);
@@ -34,9 +36,6 @@ class SpyOptions {
 
 	public function spy($option) {
 		if ($option === 'spy-options-options') {
-			return;
-		}
-		if (in_array($option, self::UNSAFE_OPTIONS)) {
 			return;
 		}
 		// Without debug_backtrace this plugin just can't work.
@@ -57,9 +56,21 @@ class SpyOptions {
 		}
 	}
 
+	private function options_list($options) {
+		$output = '';
+		foreach ($options as $option) {
+			$class = in_array($option, $this->core_options) ? ' class="spy-core-option"' : '';
+			$output .= '<code'.$class.'>'.$option.'</code>, ';
+		}
+		$output = substr($output, 0, -2).'.';
+		return $output;
+	}
+
 	public function render_page() {
 		echo '<style media="screen">.button.button-danger { background-color: #DE3C3C; color: white; margin-top: 10px; box-shadow: 0 1px 0 #C10100; border-color: #C00000} .item {padding-bottom: 10px; }
-		.button.button-danger:hover, .button.button-danger:focus {border-color: #C00; color: #FFF; background: #C00;}</style>';
+		.button.button-danger:hover, .button.button-danger:focus {border-color: #C00; color: #FFF; background: #C00;}
+		.spy-core-option {background: rgba(0, 0, 0, 0.25);}
+		.item {line-height: 2;}</style>';
 		echo '<div class="wrap"><h1>'.esc_html(get_admin_page_title()).'</h1>';
 		echo wp_kses_post(self::USAGE);
 
@@ -72,9 +83,9 @@ class SpyOptions {
 		foreach ($list as $plugin_name => $options) {
 			echo '<div class="item"><input type="checkbox" id="'.esc_attr($plugin_name).'" name="'.esc_attr($plugin_name).'">';
 			echo '<label for="'.esc_attr($plugin_name).'">'.esc_attr($plugin_name).'</label><br>';
-			$opt_list = implode('</code>, <code>', $options);
-			$opt_list = '<code>'.$opt_list.'</code>.';
-			echo wp_kses_post($opt_list);
+			//$opt_list = implode('</code>, <code>', $options);
+			//$opt_list = '<code>'.$opt_list.'</code>.';
+			echo wp_kses_post($this->options_list($options));
 			echo '</div>';
 		}
 		echo '<input type="submit" class="button button-danger button-primary" id="submit_button" value="Delete"></input>';
@@ -113,6 +124,9 @@ class SpyOptions {
 			$delete = array_merge($delete, $options);
 			unset($list[$plugin]);
 			foreach ($options as $option) {
+				if (in_array($option, $this->core_options)) {
+					continue;
+				}
 				delete_option($option);
 			}
 		}
