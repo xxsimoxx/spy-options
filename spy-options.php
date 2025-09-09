@@ -39,6 +39,9 @@ class SpyOptions {
 		if ($option === 'spy-options-options') {
 			return;
 		}
+		if (str_starts_with($option, '_transient_')) {
+			return;
+		}
 		// Without debug_backtrace this plugin just can't work.
 		$bts = debug_backtrace(); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 		foreach ($bts as $bt) {
