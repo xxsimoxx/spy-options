@@ -61,6 +61,7 @@ class SpyOptions {
 	}
 
 	private function options_list($options) {
+		asort($options);
 		$output = '';
 		foreach ($options as $option) {
 			$class = in_array($option, $this->core_options) ? ' class="spy-core-option"' : '';
