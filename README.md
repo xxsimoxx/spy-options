@@ -12,6 +12,8 @@ When creating a new website, it is common to experiment with multiple plugins to
 When the site is finished, this plugin helps to clean up the database from options that are no longer necessary, allowing you to delete all the options of one or more plugins.
 Options displayed in darker gray are core options, and will not be deleted.
 
+**Make sure you have a working backup of your database before proceeding to clear options.**
+
 This plugin is built for [ClassicPress](https://www.classicpress.net/).
 
 [![ClassicPress Directory Coding Standard checks.](https://github.com/xxsimoxx/spy-options/actions/workflows/cpcs.yml/badge.svg)](https://github.com/xxsimoxx/spy-options/actions/workflows/cpcs.yml)
