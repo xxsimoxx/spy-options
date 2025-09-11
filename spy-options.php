@@ -21,6 +21,7 @@ class SpyOptions {
 
 	private $screen       = '';
 	private $core_options = [];
+	private $all_plugins  = null;
 
 	const SLUG = 'spy_options';
 
@@ -71,6 +72,18 @@ class SpyOptions {
 		return $output;
 	}
 
+	private function get_plugin_name($folder) {
+		if (is_null($this->all_plugins)) {
+			$this->all_plugins = get_plugins();
+		}
+		foreach ($this->all_plugins as $slug => $info) {
+			if (!str_starts_with($slug, $folder.'/')) {
+				continue;
+			}
+			return $info['Name'];
+		}
+	}
+
 	public function render_page() {
 		echo '<div class="wrap"><h1>'.esc_html(get_admin_page_title()).'</h1>';
 
@@ -85,9 +98,10 @@ class SpyOptions {
 		echo '<form action="'.esc_url_raw(add_query_arg(['action' => 'delete'], admin_url('admin.php?page='.self::SLUG))).'" method="POST">';
 		wp_nonce_field('delete', '_'.self::SLUG);
 
-		foreach ($list as $plugin_name => $options) {
-			echo '<div class="item"><input type="checkbox" id="'.esc_attr($plugin_name).'" name="'.esc_attr($plugin_name).'">';
-			echo '<label for="'.esc_attr($plugin_name).'">'.esc_attr($plugin_name).'</label><br>';
+		foreach ($list as $plugin_folder => $options) {
+			$plugin_name = $this->get_plugin_name($plugin_folder) ?? $plugin_folder.' (folder name)';
+			echo '<div class="item"><input type="checkbox" id="'.esc_attr($plugin_folder).'" name="'.esc_attr($plugin_folder).'">';
+			echo '<label for="'.esc_attr($plugin_folder).'"><b>'.esc_attr($plugin_name).'</b></label><br>';
 			echo wp_kses_post($this->options_list($options));
 			echo '</div>';
 		}
