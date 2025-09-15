@@ -94,7 +94,8 @@ class SpyOptions {
 			echo '</div>';
 			return;
 		}
-		echo '<div class="item"><span class="dashicons dashicons-warning"></span><b>Make sure you have a working backup of your database before proceeding to clear options.</b></div>';
+		echo '<div class="item"><span class="dashicons dashicons-warning"></span><b>Make sure you have a working backup of your database before proceeding to clear options.</b>';
+		echo ' <a href="#" onClick="document.getElementById(\'contextual-help-link\').click()">Need help?</a></div>';
 		echo '<form action="'.esc_url_raw(add_query_arg(['action' => 'delete'], admin_url('admin.php?page='.self::SLUG))).'" method="POST">';
 		wp_nonce_field('delete', '_'.self::SLUG);
 
@@ -135,12 +136,22 @@ When the site is finished, this plugin helps to clean up the database from optio
 The longer it remains active, the more options will be listed on this page.</p>
 <p><b>By selecting the plugins and pressing delete all the options relating to those plugins will be deleted.</b><br>Options displayed in <code class="spy-core-option">darker gray</code> are core options, and will not be deleted.</p>';
 
+		$how_it_works ='<p>This plugin hooks to <code>add_option</code> and <code>update_option</code> and uses <code>debug_backtrace()</code> to try to find which plugin is changing an option.</p>
+		<p>Transient are not affected. Core options are logged but not deleted.</p>';
+
 		$screen = get_current_screen();
 		$screen->add_help_tab(
 			[
 				'id'	  => 'spy_options_help_tab_general',
 				'title'	  => 'Usage',
-				'content' => '<p>'.$general_content.'</p>',
+				'content' => $general_content,
+			]
+		);
+		$screen->add_help_tab(
+			[
+				'id'	  => 'spy_options_help_tab_how_it_works',
+				'title'	  => 'How it works',
+				'content' => $how_it_works,
 			]
 		);
 	}
