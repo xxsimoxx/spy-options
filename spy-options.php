@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Spy options
  * Description:  Get a list of which plugin use which option and delete unused ones.
- * Version:      1.1.0
+ * Version:      1.2.0
  * License:      GPL2
  * Requires CP:  2.5
  * Requires PHP: 8.0
@@ -217,7 +217,7 @@ The longer it remains active, the more options will be listed on this page.</p>
 		if ($hook !== $this->screen) {
 			return;
 		}
-		wp_enqueue_style('spy_options_backend', plugin_dir_url(__FILE__).'css/backend.css', [], '1.1.0');
+		wp_enqueue_style('spy_options_backend', plugin_dir_url(__FILE__).'css/backend.css', [], '1.2.0');
 	}
 
 	public function backend_js($hook) {
