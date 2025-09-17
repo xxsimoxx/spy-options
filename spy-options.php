@@ -33,7 +33,9 @@ class SpyOptions {
 		add_action('add_option',            [$this, 'spy']);
 
 		add_action('admin_menu',            [$this, 'create_menu'], 100);
+		add_action('wp_ajax_spyoption',     [$this, 'ajax_callback']);
 		add_action('admin_enqueue_scripts', [$this, 'backend_css']);
+		add_action('admin_enqueue_scripts', [$this, 'backend_js']);
 	}
 
 	public function spy($option) {
@@ -61,12 +63,33 @@ class SpyOptions {
 		}
 	}
 
+	public function ajax_callback() {
+
+		if (!isset($_REQUEST['nonce'])) {
+			die('Missing nonce.');
+		}
+		if (!wp_verify_nonce(sanitize_key(wp_unslash($_REQUEST['nonce'])), 'spyoption-ajax-nonce')) {
+			die('Nonce error.');
+		}
+		if (!isset($_REQUEST['opt'])) {
+			die('Missing option.');
+		}
+		$option  = sanitize_key(wp_unslash($_REQUEST['opt']));
+		$response = [
+			'opt'   => $option,
+			'value' => get_option($option),
+		];
+		echo wp_json_encode($response);
+		wp_die();
+
+	}
+
 	private function options_list($options) {
 		asort($options);
 		$output = '';
 		foreach ($options as $option) {
 			$class = in_array($option, $this->core_options) ? ' class="spy-core-option"' : '';
-			$output .= '<code'.$class.'>'.$option.'</code>, ';
+			$output .= '<code '.$class.'><a href="#" class="option-link">'.$option.'</a></code>, ';
 		}
 		$output = substr($output, 0, -2).'.';
 		return $output;
@@ -109,6 +132,7 @@ class SpyOptions {
 		echo '<input type="submit" class="button button-danger button-primary" id="submit_button" value="Delete"></input>';
 		echo '</form>';
 		echo '</div>';
+		echo '<dialog class="option-modal" id="option-modal"></dialog>';
 	}
 
 	public function create_menu() {
@@ -134,9 +158,10 @@ class SpyOptions {
 <p>When creating a new website, it is common to experiment with multiple plugins to achieve the desired functionality.<br>
 When the site is finished, this plugin helps to clean up the database from options that are no longer necessary, allowing you to delete all the options of one or more plugins.<br>
 The longer it remains active, the more options will be listed on this page.</p>
-<p><b>By selecting the plugins and pressing delete all the options relating to those plugins will be deleted.</b><br>Options displayed in <code class="spy-core-option">darker gray</code> are core options, and will not be deleted.</p>';
+<p><b>By selecting the plugins and pressing delete all the options relating to those plugins will be deleted.</b><br>Options displayed in <code class="spy-core-option">darker gray</code> are core options, and will not be deleted.</p>
+<p>Clicking on an option will show the option\'s value.</p>';
 
-		$how_it_works ='<p>This plugin hooks to <code>add_option</code> and <code>update_option</code> and uses <code>debug_backtrace()</code> to try to find which plugin is changing an option.</p>
+		$how_it_works = '<p>This plugin hooks to <code>add_option</code> and <code>update_option</code> and uses <code>debug_backtrace()</code> to try to find which plugin is changing an option.</p>
 		<p>Transient are not affected. Core options are logged but not deleted.</p>';
 
 		$screen = get_current_screen();
@@ -193,6 +218,21 @@ The longer it remains active, the more options will be listed on this page.</p>
 			return;
 		}
 		wp_enqueue_style('spy_options_backend', plugin_dir_url(__FILE__).'css/backend.css', [], '1.1.0');
+	}
+
+	public function backend_js($hook) {
+		if ($hook !== $this->screen) {
+			return;
+		}
+		wp_enqueue_script('spy_options_backend_js', plugin_dir_url(__FILE__).'js/backend.js', [], '1.2.0', false);
+		wp_localize_script(
+			'spy_options_backend_js',
+			'spyo',
+			[
+				'url'   => admin_url('admin-ajax.php'),
+				'nonce' => wp_create_nonce('spyoption-ajax-nonce'),
+			]
+		);
 	}
 
 	function before_action_checks($action) {
