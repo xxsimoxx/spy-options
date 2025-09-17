@@ -26,14 +26,12 @@ function spyo_get_option(option) {
 	spyo_get_ajax_option(option);
 }
 
-function spyo_render_option(opt, value) {
-	// Code adapted from Tim Kaye - Directory Integration Plugin
-	var width = window.innerWidth,
-	height = window.innerHeight,
-	size = Math.min(width, height) / 2
+function spyo_render_option(option, value) {
+	// Code adapted from Tim Kaye - ClassicPress Directory Integration Plugin
+	size = window.innerWidth * .75
 	dialog = document.getElementById('option-modal');
 	dialog.showModal();
-	dialog.innerHTML = '<div id="option-container" style="width: ' + size + 'px;height: auto;" title="' + opt + '"><button type="button" id="dialog-close-button" autofocus><span class="screen-reader-text">Close</span></button><div><h4>' + opt + '</h4><pre>' + JSON.stringify(value, null, 2) + '</pre></div></div>';
+	dialog.innerHTML = '<div id="option-container" style="width: ' + size + 'px;height: auto;" title="' + option + '"><button type="button" id="dialog-close-button" autofocus><span class="screen-reader-text">Close</span></button><div><h3>' + option + '</h3><pre>' + JSON.stringify(value, null, 2) + '</pre></div></div>';
 	closeButton = dialog.querySelector('#dialog-close-button');
 	closeButton.focus();
 	closeButton.addEventListener('click', function() {
