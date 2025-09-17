@@ -118,7 +118,7 @@ class SpyOptions {
 			return;
 		}
 		echo '<div class="item"><span class="dashicons dashicons-warning"></span><b>Make sure you have a working backup of your database before proceeding to clear options.</b>';
-		echo ' <a href="#" onClick="document.getElementById(\'contextual-help-link\').click()">Need help?</a></div>';
+		echo ' <a href="#" id="help-link">Need help?</a></div>';
 		echo '<form action="'.esc_url_raw(add_query_arg(['action' => 'delete'], admin_url('admin.php?page='.self::SLUG))).'" method="POST">';
 		wp_nonce_field('delete', '_'.self::SLUG);
 

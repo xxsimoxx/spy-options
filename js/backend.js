@@ -65,4 +65,8 @@ document.addEventListener("DOMContentLoaded", function(){
 			}
 		})
 	}
+
+	document.getElementById('help-link').addEventListener("click", () => {
+		document.getElementById('contextual-help-link').click()
+	})
 });
