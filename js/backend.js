@@ -59,12 +59,14 @@ document.addEventListener("DOMContentLoaded", function(){
 	for (let i of arrClass) {
 		i.addEventListener("click", (e) => {
 			if (e.target.classList.contains("option-link")) {
+				e.preventDefault();
 				spyo_get_option(e.target.innerHTML)
 			}
 		})
 	}
 
-	document.getElementById('help-link').addEventListener("click", () => {
+	document.getElementById('help-link').addEventListener("click", (e) => {
+		e.preventDefault();
 		document.getElementById('contextual-help-link').click()
 	})
 });
