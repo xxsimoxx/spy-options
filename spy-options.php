@@ -20,14 +20,12 @@ if (!defined('ABSPATH')) {
 class SpyOptions {
 
 	private $screen       = '';
-	private $core_options = [];
 	private $all_plugins  = null;
 
 	const SLUG = 'spy_options';
 
 	public function __construct() {
 		require_once __DIR__.'/includes/core-options.php';
-		$this->core_options = get_core_options();
 
 		add_action('update_option',         [$this, 'spy']);
 		add_action('add_option',            [$this, 'spy']);
@@ -87,8 +85,9 @@ class SpyOptions {
 	private function options_list($options) {
 		asort($options);
 		$output = '';
+		$core_options = get_core_options();
 		foreach ($options as $option) {
-			$class = in_array($option, $this->core_options) ? ' class="spy-core-option"' : '';
+			$class = in_array($option, $core_options) ? ' class="spy-core-option"' : '';
 			$output .= '<code '.$class.'><a href="#" class="option-link">'.$option.'</a></code>, ';
 		}
 		$output = substr($output, 0, -2).'.';
@@ -186,10 +185,11 @@ The longer it remains active, the more options will be listed on this page.</p>
 			return;
 		}
 
-		$list    = get_option('spy-options-options', []);
+		$list         = get_option('spy-options-options', []);
 		// Nonce is checked by before_action_checks
-		$request = wp_unslash($_POST); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$delete  = [];
+		$request      = wp_unslash($_POST); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$delete       = [];
+		$core_options = get_core_options();
 		foreach ($list as $plugin => $options) {
 			if (!isset($request[$plugin])) {
 				continue;
@@ -197,7 +197,7 @@ The longer it remains active, the more options will be listed on this page.</p>
 			$delete = array_merge($delete, $options);
 			unset($list[$plugin]);
 			foreach ($options as $option) {
-				if (in_array($option, $this->core_options)) {
+				if (in_array($option, $core_options)) {
 					continue;
 				}
 				delete_option($option);

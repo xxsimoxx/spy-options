@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 
 
 function get_core_options() {
-	return [
+	$core_options = [
 		'active_plugins',
 		'admin_email_lifespan',
 		'admin_email',
@@ -115,4 +115,22 @@ function get_core_options() {
 		'wp_force_deactivated_plugins',
 		'wp_page_for_privacy_policy',
 	];
+
+	/**
+	 * Filters the list of core options.
+	 *
+	 * @since 1.2.0
+	 *
+	 * Example:
+	 * add_filter( 'spy_options_core_options', 'mod_spy_core_options' );
+	 * function mod_spy_core_options( $core_options ) {
+	 *		// Add a new core option.
+	 *		$core_options[] = 'xsx_short_it';
+	 *		// Remove a core option.
+	 *		return array_diff( $core_options, array( 'uninstall_plugins' ) );
+	 * }
+	 *
+	 * @param array $core_options Array of core options.
+	 */
+	return apply_filters('spy_options_core_options', $core_options);
 }
