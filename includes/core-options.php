@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) {
 
 
 function get_core_options() {
+	global $table_prefix;
 	$core_options = [
 		'active_plugins',
 		'admin_email_lifespan',
@@ -114,6 +115,7 @@ function get_core_options() {
 		'wp_attachment_pages_enabled',
 		'wp_force_deactivated_plugins',
 		'wp_page_for_privacy_policy',
+		$table_prefix.'user_roles',
 	];
 
 	/**
