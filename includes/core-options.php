@@ -34,6 +34,7 @@ function get_core_options() {
 		'comments_notify',
 		'comments_per_page',
 		'cp_db_version',
+		'cp_dc_options',
 		'cp_user_roles',
 		'cron',
 		'date_format',
