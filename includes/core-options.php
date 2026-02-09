@@ -79,6 +79,7 @@ function get_core_options() {
 		'page_on_front',
 		'permalink_structure',
 		'ping_sites',
+		'plugins_using_blocks',
 		'posts_per_page',
 		'posts_per_rss',
 		'recently_edited',
