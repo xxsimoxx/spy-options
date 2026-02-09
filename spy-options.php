@@ -87,6 +87,9 @@ class SpyOptions {
 		$output = '';
 		$core_options = get_core_options();
 		foreach ($options as $option) {
+				if (str_starts_with($option, '_site_transient_') || str_starts_with($option, '_transient_')) {
+					continue;
+				}
 			$class = in_array($option, $core_options) ? ' class="spy-core-option"' : '';
 			$output .= '<code '.$class.'><a href="#" class="option-link">'.$option.'</a></code>, ';
 		}
@@ -198,6 +201,9 @@ The longer it remains active, the more options will be listed on this page.</p>
 			unset($list[$plugin]);
 			foreach ($options as $option) {
 				if (in_array($option, $core_options)) {
+					continue;
+				}
+				if (str_starts_with($option, '_site_transient_') || str_starts_with($option, '_transient_')) {
 					continue;
 				}
 				delete_option($option);
