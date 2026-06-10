@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Spy options
  * Description:  Get a list of which plugin use which option and delete unused ones.
- * Version:      1.2.2
+ * Version:      1.2.3
  * License:      GPL2
  * Requires CP:  2.5
  * Requires PHP: 8.0
